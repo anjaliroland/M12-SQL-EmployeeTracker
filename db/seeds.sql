@@ -1,3 +1,4 @@
+-- DEPARTMENT SEED DATA --
 INSERT INTO departments (name)
 VALUES ("Parks and Rec"),
        ("Fire"),
@@ -5,6 +6,7 @@ VALUES ("Parks and Rec"),
        ("Education"),
        ("Health");
 
+-- ROLE SEED DATA --
 INSERT INTO roles (title, salary, department_id)
 VALUES ("Director", 110000, 1),
        ("Deputy Director", 95000, 1),
@@ -15,10 +17,7 @@ VALUES ("Director", 110000, 1),
        ("Superintendent", 90000, 4),
        ("PR Director", 70000, 5);
 
-
-
-
-
+-- EMPLOYEE SEED DATA --
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES ("Ron", "Swanson", 1, null),
        ("Leslie", "Knope", 2, 1),
