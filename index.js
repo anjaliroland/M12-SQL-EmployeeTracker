@@ -46,21 +46,37 @@ const startApp = async () => {
             console.log("Bye!");
             break;
     }
+    await startApp();
     // err catch here
-}
+};
 
 // view all depts ()
-    // shown formatted table showing department names and department ids
+const viewAllDepts = async () => {
+    const [rows, fields] = await db.promise().query(`SELECT id, name FROM departments`);
+    console.table(rows);
+};
 
 // view all roles ()
-    // shown formatted table showing job titles, role ids, department that role belongs to, & salaries
+const viewAllRoles = async () => {
+    const queryStr = `SELECT roles.id, roles.title, departments.name AS department, roles.salary FROM roles
+    LEFT JOIN departments ON roles.department_id = departments.id`;
+    const [rows, fields] = await db.promise().query(queryStr);
+    console.table(rows);
+};
 
 // view all employees ()
-    // shown formatted table showing employee ids, first names, last names, job titles, departments, salaries, and managers employee reports to
+const viewAllEmployees = async () => {
+    const queryStr = `SELECT employees.id, employees.first_name, employees.last_name, roles.title AS job_title, departments.name AS department, CONCAT(m.first_name, ' ', m.last_name) AS manager_name FROM employees
+    LEFT JOIN roles ON employees.role_id = roles.id
+    LEFT JOIN departments ON roles.department_id = departments.id
+    LEFT JOIN employees m ON employees.manager_id = m.id`;
+    const [rows, fields] = await db.promise().query(queryStr);
+    console.table(rows);
+};
 
 // add dept ()
-    // prompted to enter name of department
-    // department is then added to database
+    // prompted to enter name of new dept
+    // dept is added to database
 
 // add role ()
     // prompted to enter name, salary, and department role is in
