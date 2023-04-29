@@ -50,13 +50,14 @@ const startApp = async () => {
     // err catch here
 };
 
-// view all depts ()
+// VIEW =============================================================================================
+    // view all depts ()
 const viewAllDepts = async () => {
     const [rows, fields] = await db.promise().query(`SELECT id, name FROM departments`);
     console.table(rows);
 };
 
-// view all roles ()
+    // view all roles ()
 const viewAllRoles = async () => {
     const queryStr = `SELECT roles.id, roles.title, departments.name AS department, roles.salary FROM roles
     LEFT JOIN departments ON roles.department_id = departments.id`;
@@ -64,7 +65,7 @@ const viewAllRoles = async () => {
     console.table(rows);
 };
 
-// view all employees ()
+    // view all employees ()
 const viewAllEmployees = async () => {
     const queryStr = `SELECT employees.id, employees.first_name, employees.last_name, roles.title AS job_title, departments.name AS department, CONCAT(m.first_name, ' ', m.last_name) AS manager_name FROM employees
     LEFT JOIN roles ON employees.role_id = roles.id
@@ -74,18 +75,88 @@ const viewAllEmployees = async () => {
     console.table(rows);
 };
 
-// add dept ()
-    // prompted to enter name of new dept
-    // dept is added to database
+// ADD ==============================================================================================
+    // add dept ()
+const addDept = async () => {
+    const dept = await inquirer.prompt({
+        type: "input",
+        name: "name",
+        message: "Enter the name of the new department."
+    });
+    await db.promise().query(`INSERT INTO departments(name) VALUES (?)`, dept.name);
+    console.log(`${dept.name} department has been added to the database!\n`);
+};
 
-// add role ()
-    // prompted to enter name, salary, and department role is in
-    // role is added to database
+    // add role ()
+const addRole = async () => {
+        // getting depts to display in choices
+    const [deptRows, deptFields] = await db.promise().query(`SELECT id, name FROM departments`);
+    const deptChoices = deptRows.map((dept) => {
+        return {name: dept.name, value: dept.id};
+    });
+    const role = await inquirer.prompt([
+        {
+            type: "input",
+            name: "title",
+            message: "Enter the title of the new role."
+        },
+        {
+            type: "input",
+            name: "salary",
+            message: "Enter the salary of the new role."
+        },
+        {
+            type: "list",
+            name: "department",
+            message: "Select the department the new role is in.",
+            choices: deptChoices
+        }
+    ]);
+    await db.promise().query(`INSERT INTO roles(title, salary, department_id) VALUES (?, ?, ?)`, [role.title, role.salary, role.department]);
+    console.log(`${role.title} role has been added to the database!\n`);
+};
 
-// add employee ()
-    // prompted to enter first name, last name, role, and manager of employee
-    // employee is added to database
+    // add employee ()
+const addEmployee = async () => {
+        // getting roles list to display in choices
+    const [roleRows, roleFields] = await db.promise().query(`SELECT id, title FROM roles`);
+    const roleChoices = roleRows.map((role) => {
+        return { name: role.title, value: role.id };
+    });
+        // getting employees list to display in choices
+    const [empRows, empFields] = await db.promise().query(`SELECT id, first_name, last_name FROM employees`);
+    const empChoices = empRows.map((emp) => {
+        return { name: `${emp.first_name} ${emp.last_name}`, value: emp.id };
+    });
+    const employee = await inquirer.prompt([
+        {
+            type: "input",
+            name: "first_name",
+            message: "Enter the first name of the new employee:",
+          },
+          {
+            type: "input",
+            name: "last_name",
+            message: "Enter the last name of the new employee:",
+          },
+          {
+            type: "list",
+            name: "role",
+            message: "Select the role of the new employee:",
+            choices: roleChoices,
+          },
+          {
+            type: "list",
+            name: "manager",
+            message: "Select the manager of the new employee:",
+            choices: [{ name: "None", value: null }, ...empChoices],
+          },
+    ]);
+    await db.promise().query(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [employee.first_name, employee.last_name, employee.role, employee.manager]);
+    console.log(`${employee.first_name} ${employee.last_name} has been added to the database!\n`);
+};
 
+// UPDATE ===========================================================================================
 // update employee role ()
     // prompted to select an employee and enter new role
     // role of employee is updated in database
