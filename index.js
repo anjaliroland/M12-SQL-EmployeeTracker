@@ -14,40 +14,43 @@ const db = mysql.createConnection(
 
 
 const startApp = async () => {
-    const ans = await inquirer.prompt({
-        type: "list",
-        name: "options",
-        message: "What would you like to do?",
-        choices: ["View All Departments", "View All Roles", "View All Employees", "Add A Department", "Add A Role", "Add An Employee", "Update An Employee Role", "Quit"]
-    })
-    switch (ans.options) {
-        case "View All Departments":
-            await viewAllDepts();
-            break;
-        case "View All Roles":
-            await viewAllRoles();
-            break;
-        case "View All Employees":
-            await viewAllEmployees();
-            break;
-        case "Add A Department":
-            await addDept();
-            break;
-        case "Add A Role":
-            await addRole();
-            break;
-        case "Add An Employee":
-            await addEmployee();
-            break;
-        case "Update An Employee Role":
-            await updateEmployeeRole();
-            break;
-        case "Quit":
-            console.log("Bye!");
-            break;
+    try {
+        const ans = await inquirer.prompt({
+            type: "list",
+            name: "options",
+            message: "What would you like to do?",
+            choices: ["View All Departments", "View All Roles", "View All Employees", "Add A Department", "Add A Role", "Add An Employee", "Update An Employee Role", "Quit"]
+        });
+        switch (ans.options) {
+            case "View All Departments":
+                await viewAllDepts();
+                break;
+            case "View All Roles":
+                await viewAllRoles();
+                break;
+            case "View All Employees":
+                await viewAllEmployees();
+                break;
+            case "Add A Department":
+                await addDept();
+                break;
+            case "Add A Role":
+                await addRole();
+                break;
+            case "Add An Employee":
+                await addEmployee();
+                break;
+            case "Update An Employee Role":
+                await updateEmployeeRole();
+                break;
+            case "Quit":
+                console.log("Bye!");
+                return;
+        }
+        await startApp();
+    } catch(err) {
+        console.log(err);
     }
-    await startApp();
-    // err catch here
 };
 
 // VIEW =============================================================================================
@@ -157,10 +160,35 @@ const addEmployee = async () => {
 };
 
 // UPDATE ===========================================================================================
-// update employee role ()
-    // prompted to select an employee and enter new role
-    // role of employee is updated in database
-
+    // update employee role ()
+const updateEmployeeRole = async () => {
+        // getting employees to display in choices
+    const [empRows, empFields] = await db.promise().query(`SELECT id, first_name, last_name FROM employees`);
+    const empChoices = empRows.map((emp) => {
+        return {name: `${emp.first_name} ${emp.last_name}`, value: emp.id};
+    });
+        // getting roles to display in choices
+    const [roleRows, roleFields] = await db.promise().query(`SELECT id, title FROM roles`);
+    const roleChoices = roleRows.map((role) => {
+        return {name: role.title, value: role.id};
+    });
+    const update = await inquirer.prompt([
+        {
+            type: "list",
+            name: "employee",
+            message: "Select the employee whose role you want to update.",
+            choices: empChoices
+        },
+        {
+            type: "list",
+            name: "role",
+            message: "Select the new role for the employee.",
+            choices: roleChoices
+        }
+    ]);
+    const [rows, fields] = await db.promise().query(`UPDATE employees SET role_id = ? WHERE id = ?`, [update.role, update.employee]);
+    console.log(`${rows.affectedRows} employee has been update with a new role!\n`);
+};
 
 
 startApp();
