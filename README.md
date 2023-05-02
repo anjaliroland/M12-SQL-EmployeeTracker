@@ -1,6 +1,5 @@
 # Employee Tracker
 
-<!--
 ## Table of Contents
 
 - [Description](#📝-description)
@@ -8,18 +7,17 @@
     - [Acceptance Criteria](#☑️-acceptance-criteria)
 - [Technologies Used](#🛠️-technologies-used)
 - [Usage](#💻-usage)
+    - [Screenshot](#📸-screenshot)
 - [License](#📃-license)
 - [Links](#🔗-links)
 
+------------
+
 ## 📝 Description
 
-Provide a short description explaining the what, why, and how of your project. Use the following questions as a guide:
+For this module we were tasked with creating a command-line application that can manage a company's employee database, from scratch with Node.js, inquirer, and MySQL.
 
-- What was your motivation?
-- Why did you build this project? (Note: the answer is not "Because it was a homework assignment.")
-- What problem does it solve?
-- What did you learn?
--->
+-------------
 
 ### 👤 User Story
 
@@ -28,7 +26,7 @@ AS A business owner
 I WANT to be able to view and manage the departments, roles, and employees in my company
 SO THAT I can organize and plan my business
 ```
-
+-------------
 ### ☑️ Acceptance Criteria
 
 ```md
@@ -50,8 +48,8 @@ THEN I am prompted to enter the employee’s first name, last name, role, and ma
 WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
 ```
+--------------
 
-<!--
 ## 🛠️ Technologies Used
 
 <ul>
@@ -63,21 +61,35 @@ THEN I am prompted to select an employee to update and their new role and this i
 <li>mySQL
 </ul>
 
+--------------
 ## 💻 Usage
 
-Video Walkthrough: 
--->
+**Steps for Usage**  
+***1:*** open the terminal  
+***2:*** run  `npm i` to install necessary packages included in the `package.json`   
+***3:*** run `mysql -u root -p` to start mysql  
+***4:*** run `node index` to start the application   
+***5:*** follow prompts  
+***6:*** to quit the application select 'quit' option when asked what you would like to do
 
+
+**Video Walkthrough:**
+
+----------------
+### 📸 Screenshot
+
+![screenshot of app](./db/images/screenshot.png)
+
+--------------
 
 ## 📃 License
 
 Please refer to the LICENSE in the repo.
 
-<!--
+-------------
+
 ## 🔗 Links
 
 inquirer Docs: https://www.npmjs.com/package/inquirer/v/8.2.4
 
 mysql2 Docs: https://www.npmjs.com/package/mysql2
-
--->
