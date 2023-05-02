@@ -9,9 +9,26 @@ const db = mysql.createConnection(
       password: "password",
       database: "employee_db",
     },
-    console.log("connected!")
-  );
+);
 
+console.table(
+`
+'########:'##::::'##:'########::'##::::::::'#######::'##:::'##:'########:'########:
+ ##.....:: ###::'###: ##.... ##: ##:::::::'##.... ##:. ##:'##:: ##.....:: ##.....::
+ ##::::::: ####'####: ##:::: ##: ##::::::: ##:::: ##::. ####::: ##::::::: ##:::::::
+ ######::: ## ### ##: ########:: ##::::::: ##:::: ##:::. ##:::: ######::: ######:::
+ ##...:::: ##. #: ##: ##.....::: ##::::::: ##:::: ##:::: ##:::: ##...:::: ##...::::
+ ##::::::: ##:.:: ##: ##:::::::: ##::::::: ##:::: ##:::: ##:::: ##::::::: ##:::::::
+ ########: ##:::: ##: ##:::::::: ########:. #######::::: ##:::: ########: ########:
+........::..:::::..::..:::::::::........:::.......::::::..:::::........::........::
+::::::'########:'########:::::'###:::::'######::'##:::'##:'########:'########::::: 
+::::::... ##..:: ##.... ##:::'## ##:::'##... ##: ##::'##:: ##.....:: ##.... ##:::: 
+::::::::: ##:::: ##:::: ##::'##:. ##:: ##:::..:: ##:'##::: ##::::::: ##:::: ##:::: 
+::::::::: ##:::: ########::'##:::. ##: ##::::::: #####:::: ######::: ########::::: 
+::::::::: ##:::: ##.. ##::: #########: ##::::::: ##. ##::: ##...:::: ##.. ##:::::: 
+::::::::: ##:::: ##::. ##:: ##.... ##: ##::: ##: ##:. ##:: ##::::::: ##::. ##::::: 
+::::::::: ##:::: ##:::. ##: ##:::: ##:. ######:: ##::. ##: ########: ##:::. ##:::: 
+:::::::::..:::::..:::::..::..:::::..:::......:::..::::..::........::..:::::..::::: `);
 
 const startApp = async () => {
     try {
@@ -53,7 +70,8 @@ const startApp = async () => {
     }
 };
 
-// VIEW =============================================================================================
+
+// VIEW FUNCTIONS ======================================================================================
     // view all depts ()
 const viewAllDepts = async () => {
     const [rows, fields] = await db.promise().query(`SELECT id, name FROM departments`);
@@ -78,7 +96,8 @@ const viewAllEmployees = async () => {
     console.table(rows);
 };
 
-// ADD ==============================================================================================
+
+// ADD FUNCTIONS =======================================================================================
     // add dept ()
 const addDept = async () => {
     const dept = await inquirer.prompt({
@@ -92,8 +111,8 @@ const addDept = async () => {
 
     // add role ()
 const addRole = async () => {
-        // getting depts to display in choices
-    const [deptRows, deptFields] = await db.promise().query(`SELECT id, name FROM departments`);
+        // getting departments to display in choices
+    const [deptRows, deptFields] = db.promise().query(`SELECT id, name FROM departments`);
     const deptChoices = deptRows.map((dept) => {
         return {name: dept.name, value: dept.id};
     });
@@ -121,15 +140,15 @@ const addRole = async () => {
 
     // add employee ()
 const addEmployee = async () => {
-        // getting roles list to display in choices
-    const [roleRows, roleFields] = await db.promise().query(`SELECT id, title FROM roles`);
+        // getting roles to display in choices
+    const [roleRows, roleFields] = db.promise().query(`SELECT id, title FROM roles`);
     const roleChoices = roleRows.map((role) => {
-        return { name: role.title, value: role.id };
+        return {name: role.title, value: role.id};
     });
-        // getting employees list to display in choices
-    const [empRows, empFields] = await db.promise().query(`SELECT id, first_name, last_name FROM employees`);
+        // getting employees to display in choices
+    const [empRows, empFields] = db.promise().query(`SELECT id, first_name, last_name FROM employees`);
     const empChoices = empRows.map((emp) => {
-        return { name: `${emp.first_name} ${emp.last_name}`, value: emp.id };
+        return {name: `${emp.first_name} ${emp.last_name}`, value: emp.id};
     });
     const employee = await inquirer.prompt([
         {
@@ -152,14 +171,15 @@ const addEmployee = async () => {
             type: "list",
             name: "manager",
             message: "Select the manager of the new employee:",
-            choices: [{ name: "None", value: null }, ...empChoices],
+            choices: [{name: "None", value: null}, ...empChoices],
           },
     ]);
     await db.promise().query(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [employee.first_name, employee.last_name, employee.role, employee.manager]);
     console.log(`${employee.first_name} ${employee.last_name} has been added to the database!\n`);
 };
 
-// UPDATE ===========================================================================================
+
+// UPDATE FUNCTIONS ====================================================================================
     // update employee role ()
 const updateEmployeeRole = async () => {
         // getting employees to display in choices
@@ -187,7 +207,7 @@ const updateEmployeeRole = async () => {
         }
     ]);
     const [rows, fields] = await db.promise().query(`UPDATE employees SET role_id = ? WHERE id = ?`, [update.role, update.employee]);
-    console.log(`${rows.affectedRows} employee has been update with a new role!\n`);
+    console.log(`${rows.affectedRows} employee has been updated with a new role!\n`);
 };
 
 
