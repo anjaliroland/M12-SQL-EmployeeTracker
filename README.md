@@ -73,7 +73,7 @@ THEN I am prompted to select an employee to update and their new role and this i
 ***6:*** to quit the application select 'quit' option when asked what you would like to do
 
 
-**Video Walkthrough:**
+**Video Walkthrough:** https://drive.google.com/file/d/1XbQsUEvUPcb2I1yl34QdqK_ROIjGhuHa/view?usp=sharing
 
 ----------------
 ### 📸 Screenshot
