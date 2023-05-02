@@ -112,7 +112,7 @@ const addDept = async () => {
     // add role ()
 const addRole = async () => {
         // getting departments to display in choices
-    const [deptRows, deptFields] = db.promise().query(`SELECT id, name FROM departments`);
+    const [deptRows, deptFields] = await db.promise().query(`SELECT id, name FROM departments`);
     const deptChoices = deptRows.map((dept) => {
         return {name: dept.name, value: dept.id};
     });
@@ -141,12 +141,12 @@ const addRole = async () => {
     // add employee ()
 const addEmployee = async () => {
         // getting roles to display in choices
-    const [roleRows, roleFields] = db.promise().query(`SELECT id, title FROM roles`);
+    const [roleRows, roleFields] = await db.promise().query(`SELECT id, title FROM roles`);
     const roleChoices = roleRows.map((role) => {
         return {name: role.title, value: role.id};
     });
         // getting employees to display in choices
-    const [empRows, empFields] = db.promise().query(`SELECT id, first_name, last_name FROM employees`);
+    const [empRows, empFields] = await db.promise().query(`SELECT id, first_name, last_name FROM employees`);
     const empChoices = empRows.map((emp) => {
         return {name: `${emp.first_name} ${emp.last_name}`, value: emp.id};
     });
